@@ -7,18 +7,14 @@ export const authMiddleware = async (
   res: Response,
   next: NextFunction
 ) => {
-  // check if the token is in the headers
-  const token =
-    req.headers.authorization && req.headers.authorization.split(" ")[1];
-
+  const token = req.cookies.token; // Extract token from cookies
   if (!token) {
-    res.status(401).send({ message: "Unauthorized" });
+    res.status(401).send({ message: "Unauthorized, missing token" });
     return;
   }
 
-  const { userId } = jwt.verify(token, process.env.JWT_SECRET!) as {
-    userId: string;
-  };
+  const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+  const userId = (decoded as { id: string }).id;
 
   if (!userId) {
     res.status(401).send({ message: "Unauthorized" });
