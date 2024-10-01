@@ -8,13 +8,13 @@ dotenv.config();
 
 const jsonDAL = new JsonDAL<User>(process.env.USERS_FILE_PATH as string);
 
-export const createUser = async (user: User): Promise<User> => {
+export const createUser = async (username: string, password: string): Promise<User> => {
   const users = await jsonDAL.readJson();
-  const passwordHash = await bcrypt.hash(user.passwordHash, 10);
+  const passwordHash = await bcrypt.hash(password, 10);
 
   const newUser: User = {
     id: uuid(),
-    username: user.username,
+    username: username,
     passwordHash: passwordHash,
   };
   users.push(newUser);
