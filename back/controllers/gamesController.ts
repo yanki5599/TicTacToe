@@ -11,7 +11,7 @@ export const getUserGames = async (req: Request, res: Response, next: NextFuncti
   try {
     
     const games = await gamesService.getGames((req as any).user.id);
-    res.json(games);
+    res.status(200).json(games);
   } catch (error) 
   { next(error); }
 };
@@ -19,8 +19,9 @@ export const getUserGames = async (req: Request, res: Response, next: NextFuncti
 
 export const startGame = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const game = await gamesService.startGame();
-    res.json(game);
+    const user = (req as any).user;
+    const game = await gamesService.startGame(user.id);
+    res.status(200).json(game);
   } catch (error) 
   { next(error); }
 };

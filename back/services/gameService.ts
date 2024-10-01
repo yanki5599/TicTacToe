@@ -4,9 +4,9 @@ import dotenv from 'dotenv';
 import { uuid } from 'uuidv4';
 dotenv.config();
 
-const jsonDAL = new JsonDAL<Game>(process.env.USERS_FILE_PATH  as string);
+const jsonDAL = new JsonDAL<Game>(process.env.GAMES_FILE_PATH  as string);
 
-
+let currentGame: Game | null = null;
 
 export const getGames = async (id: string): Promise<Game[]> => {
   const games = await jsonDAL.readJson();
@@ -14,18 +14,20 @@ export const getGames = async (id: string): Promise<Game[]> => {
 }
 
 
-export const startGame = async (): Promise<Game> => {
-  const games = await jsonDAL.readJson();
+export const startGame = async (userId: string): Promise<Game> => {
  
-        
-  const game: Game = {
-    id: uuid(),
-    playerXId: "",
-    playerOId: "",
-    status: Status.IN_PROGRESS,
-  };
+  if(!currentGame){
+    currentGame = {
+      id: uuid(),
+      playerXId: userId,
+      playerOId: undefined,
+      status: Status.NOT_STARTED
+    }
+  }
+  else{
+    currentGame.playerOId = userId;
+    currentGame.status = Status.IN_PROGRESS;
+  }
 
-  games.push(game);
-  await jsonDAL.writeJson(games);
-  return game;
+  return currentGame;
 }

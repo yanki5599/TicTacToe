@@ -16,7 +16,7 @@ export const register = async (
   try {
     const { username, password } = req.body;
     const user: User = await userService.createUser(username, password);
-    res.json({ id: user.id, username: user.username });
+    res.status(201).json({ id: user.id, username: user.username });
   } catch (error) {
     next(error);
   }
