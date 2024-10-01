@@ -15,3 +15,7 @@ app.use("/auth", authRouter);
 app.use(authMiddleware);
 
 app.use("/games", gameRouter);
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
